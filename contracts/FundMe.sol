@@ -4,7 +4,7 @@ pragma solidity >=0.8.2 <0.9.0;
 
 import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol";
 
-
+// 预言机的使用 https://docs.chain.link/data-feeds/price-feeds/addresses?page=1&testnetPage=1&network=ethereum
 // 1.创建一个接收函数
 // 2.记录投资人并且查看
 // 3.在锁定期内，达到目标值，生产商可以提款
@@ -12,14 +12,20 @@ import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/shared/interf
 contract FundMe {
     mapping(address => uint256) public fundersToAmount;
 
-    uint256 MINIMUM_VALUE = 100 * 10 ** 18; // USD
+    uint256 constant MINIMUM_VALUE = 1 * 10 ** 18; // USD
 
     AggregatorV3Interface internal dataFeed;
+
+    uint256 constant TARGET = 1000 * 10 ** 18; // USD
+
+    // 部署合约人
+    address public owner;
 
     // 变量初始化，只在合约构造的时候调用
     constructor() {
         // sepolia testnet
         dataFeed = AggregatorV3Interface(0x694AA1769357215DE4FAC081bf1f309aDC325306); // 0.000%
+        owner = msg.sender;
     }
     
     function setDataFeed(address _dataFeed) external {
@@ -50,4 +56,22 @@ contract FundMe {
         uint256 ethPrice = uint256(getChainlinkDataFeedLatestAnswer());
         return ethAmount * ethPrice / (10 ** 8);
     }
+
+    function transferOwnership(address newOwner) public {
+        require(msg.sender == owner, "this function can only be call by owner");
+        owner = newOwner;
+    }
+
+    function getFund() external {
+        // wei --> USD
+        require(convertEthToUsd(address(this).balance) >= TARGET, "Target is not reached");
+        require(msg.sender == owner, "this function can only be call by owner");
+        // transfer: transfer ETH and revert if tx failed
+        payable(msg.sender).transfer(address(this).balance);
+        // send
+        // call
+
+    }
+
+
 }
