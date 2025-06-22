@@ -21,11 +21,17 @@ contract FundMe {
     // 部署合约人
     address public owner;
 
+    // 合约部署的时间点
+    uint256 deploymentTimestamp;
+    uint256 lockTime;
+
     // 变量初始化，只在合约构造的时候调用
-    constructor() {
+    constructor(uint256 _lockTime) {
         // sepolia testnet
         dataFeed = AggregatorV3Interface(0x694AA1769357215DE4FAC081bf1f309aDC325306); // 0.000%
         owner = msg.sender;
+        deploymentTimestamp = block.timestamp;
+        lockTime = _lockTime;
     }
     
     function setDataFeed(address _dataFeed) external {
@@ -34,6 +40,7 @@ contract FundMe {
 
     function fund() external payable {
         require(convertEthToUsd(msg.value) >= MINIMUM_VALUE, "Send more ETH");
+        require(block.timestamp < deploymentTimestamp + lockTime, "Window is closed");
         fundersToAmount[msg.sender] = msg.value;
     }
 
@@ -62,10 +69,11 @@ contract FundMe {
         owner = newOwner;
     }
 
-    function getFund() external {
+    function getFund() external windowClose onlyOwner {
         // wei --> USD
         require(convertEthToUsd(address(this).balance) >= TARGET, "Target is not reached");
-        require(msg.sender == owner, "this function can only be call by owner");
+        // require(msg.sender == owner, "this function can only be call by owner");
+        // require(block.timestamp >= deploymentTimestamp + lockTime, "Window is not closed");
         // transfer: transfer ETH and revert if tx failed
         // payable(msg.sender).transfer(address(this).balance);
         // send: transfer ETH and return false if failed
@@ -77,12 +85,23 @@ contract FundMe {
         fundersToAmount[msg.sender] = 0;
     }
 
-    function refund() external {
+    function refund() external windowClose onlyOwner {
         require(convertEthToUsd(address(this).balance) < TARGET, "Target is reached");
-        require(fundersToAmount[msg.sender] != 0, "there is no fund for you");
+        // require(fundersToAmount[msg.sender] != 0, "there is no fund for you");
+        // require(block.timestamp >= deploymentTimestamp + lockTime, "Window is not closed");
         bool success;
         (success, ) = payable(msg.sender).call{value: fundersToAmount[msg.sender]}("");
         require(success, "transfer tx failed");
         fundersToAmount[msg.sender] = 0;
+    }
+
+    modifier windowClose() {
+        require(block.timestamp >= deploymentTimestamp + lockTime, "Window is not closed");
+        _;
+    }
+
+    modifier onlyOwner() {
+        require(fundersToAmount[msg.sender] != 0, "there is no fund for you");
+        _;
     }
 }
