@@ -1,2 +1,3 @@
 .deps
-contracts/artifacts
+.states
+remix-tutorial/contracts/artifacts
