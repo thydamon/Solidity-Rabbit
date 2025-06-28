@@ -10,7 +10,7 @@ async function main() {
     // 必须等待合约工厂创建完成后才能使用
     const fundMeFactory = await ethers.getContractFactory("FundMe");
     // deploy the contract from the factory
-    const fundMe = await fundMeFactory.deploy();
+    const fundMe = await fundMeFactory.deploy(10);
     // wait for the deployment to finish
     // 这一步是必须的，因为部署合约是一个异步操作
     await fundMe.waitForDeployment();

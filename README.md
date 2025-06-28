@@ -27,3 +27,11 @@ npm install @chainlink/contracts --save-dev
 ```shell
 npx hardhat compile
 ```
+合约依赖安装
+```shell
+npm install @chainlink/contracts --save-dev
+```
+合约部署
+```shell
+npx hardhat run scripts/deploy.js
+```
