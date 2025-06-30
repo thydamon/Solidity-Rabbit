@@ -3,3 +3,7 @@
 remix-tutorial/contracts/artifacts
 web3js-tutorial/node_modules
 hardhat-tutorial/modules
+hardhat-tutorial/artifacts
+hardhat-tutorial/cache
+hardhat-tutorial/node_modules
+hardhat-tutorial/ignition/modules
