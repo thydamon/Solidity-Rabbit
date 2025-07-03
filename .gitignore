@@ -1,12 +1,9 @@
 .deps
 .states
 remix-tutorial/contracts/artifacts
-<<<<<<< HEAD
 hardhat-tutorial/artifacts
 hardhat-tutorial/cache
 hardhat-tutorial/node_modules
 hardhat-tutorial/ignition/modules
 test
-=======
 web3js-tutorial/modules
->>>>>>> 0ac465a641c5b380f0f501ccdb053c1b0dcfa6e3
