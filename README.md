@@ -35,3 +35,23 @@ npm install @chainlink/contracts --save-dev
 ```shell
 npx hardhat run scripts/deploy.js
 ```
+安装yarn
+```shell
+npm install --global yarn
+```
+安装hardhat工具箱
+```shell
+npm install --save-dev @nomicfoundation/hardhat-toolbox
+# 安装之后不能在使用 npx hardhat compile编译，会有冲突
+```
+编译
+```shell
+yarn hardhat compile
+```
+
+# Web3js练习
+安装wb3js
+```shell
+# 使用v18.16.0,有的版本不支持web3
+npm install web3@1.8.0
+```
