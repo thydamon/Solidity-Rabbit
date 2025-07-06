@@ -46,7 +46,48 @@ npm install --save-dev @nomicfoundation/hardhat-toolbox
 ```
 编译
 ```shell
+# 使用yarn编译，需执行删除node_modules,yarn.lock, yarn clean cache，新执行yarn install
 yarn hardhat compile
+```
+安装代码美化依赖
+```shell
+yarn add --dev prettier prettier-plugin-solidity
+```
+新建.prettierrc
+```shell
+{
+  "tabWidth": 4,
+  "useTabs": false,
+  "semi": false,
+  "singleQuote": false
+}
+```
+新建.prettierignore文件
+```shell
+node_modules
+package.json
+img
+artifacts
+cache
+coverage
+.env
+.*
+README.md
+coverage.json
+```
+部署
+```shell
+yarn hardhat run scripts/deploy.js
+```
+## 部署至GOERLI测试网络
+安装环境变量配置依赖
+```shell
+npm install dotenv --save
+```
+新建.env
+```shell
+GOERLI_RPC_URL=XXXXX
+PRIVATE_KEY=XXXXXXX
 ```
 
 # Web3js练习

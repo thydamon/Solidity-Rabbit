@@ -1,6 +1,20 @@
 require("@nomicfoundation/hardhat-toolbox");
+require("dotenv").config()
+
+const ETH_SEPOILA_URL = process.env.ETH_SEPOILA_URL
+const PRIVATE_KEY = process.env.PRIVATE_KEY
 
 /** @type import('hardhat/config').HardhatUserConfig */
+
 module.exports = {
-  solidity: "0.8.28",
+  defaultNetwork: "hardhat",
+  networks: {
+    hardhat: {},
+    sepolia: {
+      url: ETH_SEPOILA_URL,
+      accounts: [PRIVATE_KEY] 
+    }
+  },
+
+  solidity: "0.8.20",
 };
