@@ -1,6 +1,6 @@
 # Solidity练习
 # Hardhad练习
-## 项目安装
+## npm方式部署
 初始化Node项目
 ```shell
 npm init
@@ -8,7 +8,6 @@ npm init
 安装Hardhat
 ```shell 
 npm install --save-dev hardhat
-
 ```
 在安装Hardhat的目录运行
 ```shell
@@ -33,8 +32,17 @@ npm install @chainlink/contracts --save-dev
 ```
 合约部署
 ```shell
+# 本地网络部署
 npx hardhat run scripts/deploy.js
+# sepolia网络部署
+npx hardhat run scripts/deployFundMe.js --network sepolia
 ```
+安装hardhat的verify插件
+```shell
+npm install --save-dev @nomicfoundation/hardhat-verify
+npx hardhat verify --network sepolia 0xf9f24cf2A9f79e6A54ed6E28a7A55493b9AeD83c "10"
+```
+## yarn方式部署
 安装yarn
 ```shell
 npm install --global yarn
