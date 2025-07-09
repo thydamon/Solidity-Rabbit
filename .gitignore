@@ -8,4 +8,4 @@ hardhat-tutorial/cache
 hardhat-tutorial/ignition/modules
 test
 web3js-tutorial/modules
-.env
+hardhat-tutorial/.env
