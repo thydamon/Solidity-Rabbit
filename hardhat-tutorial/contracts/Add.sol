@@ -3,7 +3,19 @@
 pragma solidity ^0.8.20;
 
 contract Add {
+    uint number;
+
+    event myEvent(uint name);
+
     function add(uint a, uint b) public pure returns(uint) {
         return a+b;
+    }
+
+    function setNumber(uint _number) public {
+        number = _number;
+    }
+
+    function getNumber() public view returns(uint) {
+        return number;
     }
 }

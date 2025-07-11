@@ -96,7 +96,7 @@ npx hardhat node
 ```
 2、运行部署脚本
 ```shell
-npx hardhat run --network localhsot scripts/deployAdd.js
+npx hardhat run --network localhost scripts/deployAdd.js
 ```
 3、运行测试
 创建在test目录测试文件
