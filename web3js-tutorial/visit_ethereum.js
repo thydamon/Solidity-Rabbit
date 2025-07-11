@@ -108,3 +108,30 @@ contract.getPastEvents('AllEvents', {
         console.error("Error fetching past events:", error);
     }
 });
+
+// 手工部署合约
+const fs = require("fs");
+
+// 读取编译后的合约JSON文件
+const contractJson = JSON.parse(fs.readFileSync('../hardhat-tutorial/artifacts/contracts/Add.sol/Add.json', 'utf8'));
+const addContractABI = contractJson.abi;
+const addContractBytecode = contractJson.bytecode;
+
+var myContract = new web3.eth.Contract(addContractABI);
+
+var candidateNames = [
+  '0x416c696365', // "Alice"
+  '0x4265747479', // "Betty"
+  '0x5365615361'  // "SeaSa"  
+];
+
+myContract.deploy({
+    data: addContractBytecode,
+    arguments: [candidateNames]
+}).send({
+    from: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
+    gas: 1500000,
+    gasPrice: '30000000000'
+}).on('receipt', function(receipt) {
+    console.log("Contract deployed at address:", receipt.contractAddress);
+}); 
