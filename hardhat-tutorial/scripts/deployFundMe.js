@@ -15,6 +15,28 @@ async function main() {
     // 这一步是必须的，因为部署合约是一个异步操作
     await fundMe.waitForDeployment();
     console.log(`FundMe contract deployed to: ${fundMe.target}`);
+
+    // init 2 accouts
+    const [firstAccount, secondAccount] = await ethers.getSigners();
+    // fund contract with first account
+    const fundTx = await fundMe.fund({value: ethers.parseEther("0.5")});
+    await fundTx.wait()
+    // check balance of the contract
+    const balanceOfContract = await ethers.provider.getBalance(fundMe.target);
+    console.log(`Balance of contract: ${ethers.formatEther(balanceOfContract)} ETH`);
+    // fund conract with second account
+    const fundTxWithSecondAccout = await fundMe.fund({value: ethers.parseEther("0.5")});
+    await fundTxWithSecondAccout.wait()
+    // check balance of the contract again
+    const balanceOfContractAfterSecondFund = await ethers.provider.getBalance(fundMe.target);
+    console.log(`Balance of contract after second fund: ${ethers.formatEther(balanceOfContractAfterSecondFund)} ETH`);
+    // check mapping fundersToAmount
+    fundMe.fundersToAmount(firstAccount.address).then((amount) => {
+        console.log(`Amount funded by first account: ${ethers.formatEther(amount)} ETH`);
+    });
+    fundMe.fundersToAmount(secondAccount.address).then((amount) => {
+        console.log(`Amount funded by second account: ${ethers.formatEther(amount)} ETH`);
+    });
 }
 
 // async main

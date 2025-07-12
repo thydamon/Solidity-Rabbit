@@ -3,6 +3,7 @@ require("dotenv").config()
 
 const ETH_SEPOILA_URL = process.env.ETH_SEPOILA_URL
 const PRIVATE_KEY = process.env.PRIVATE_KEY
+const PRIVATE_KEY2 = process.env.PRIVATE_KEY2
 const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY
 
 /** @type import('hardhat/config').HardhatUserConfig */
@@ -14,7 +15,7 @@ module.exports = {
     sepolia: {
       // 可选的有Alchemy, Infura，QuikNode等
       url: ETH_SEPOILA_URL,
-      accounts: [PRIVATE_KEY] 
+      accounts: [PRIVATE_KEY,PRIVATE_KEY2] 
     }
   },
   requestTimeout: 60000, // 60秒
