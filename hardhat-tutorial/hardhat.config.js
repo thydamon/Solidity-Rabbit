@@ -1,5 +1,8 @@
 require("@nomicfoundation/hardhat-toolbox");
-require("dotenv").config()
+require("dotenv").config();
+// require("./tasks/depoly-fundme.js");
+// require("./tasks/interact-fundme.js");
+require("./tasks");
 
 const ETH_SEPOILA_URL = process.env.ETH_SEPOILA_URL
 const PRIVATE_KEY = process.env.PRIVATE_KEY
