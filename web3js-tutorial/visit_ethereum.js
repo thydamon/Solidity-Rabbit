@@ -90,9 +90,11 @@ contract.methods.getNumber().call(function(error, result) {
     }
 })
 
+const hardhatAccountAddress = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266';
+
 // 写入智能合约状态的函数调用
 contract.methods.setNumber(1234)
-.send({ from: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266'})
+.send({ from: hardhatAccountAddress})
 .on('receipt', function(receipt) {
     console.log("Transaction receipt:", receipt);
 })
@@ -129,9 +131,64 @@ myContract.deploy({
     data: addContractBytecode,
     arguments: [candidateNames]
 }).send({
-    from: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
+    from: hardhatAccountAddress,
     gas: 1500000,
     gasPrice: '30000000000'
 }).on('receipt', function(receipt) {
     console.log("Contract deployed at address:", receipt.contractAddress);
-}); 
+});
+
+// 获取指定账户中的余额
+web3.eth.getBalance(address, function(error, balance) {
+    if (!error) {
+        console.log("Balance of account:", balance);
+    } else {
+        console.error("Error fetching balance:", error);
+    }
+});
+
+// 查询平均gas价格
+web3.eth.getGasPrice().then(function(gasPrice) {
+    console.log("Average gas price:", gasPrice);
+}).catch(function(error) {
+    console.error("Error fetching gas price:", error);
+});
+
+const hardhatReceiverAddress = '0x70997970C51812dc3A010C7d01b50e0d17dc79C8'; // 替换为实际接收地址
+
+// 发送交易
+var transaction = {
+    from: hardhatAccountAddress,
+    to: hardhatReceiverAddress,
+    value: web3.utils.toWei('0.1', 'ether'),
+    gas: 2000000,
+    gasPrice: '30000000000'
+};
+
+web3.eth.sendTransaction(transaction)
+    .then(function(receipt) {
+        console.log("Transaction receipt:", receipt);
+    })
+    .catch(function(error) {
+        console.error("Error sending transaction:", error);
+    });
+
+const transactionHash = '0x4ca4558bc1a3e43a0a5ff13f717bec54c31fbf59f2b2564e985edd73f43bfcbc'; // 替换为实际交易哈希
+
+// 查询交易信息
+web3.eth.getTransaction(transactionHash)
+    .then(function(transaction) {
+        console.log("Transaction details:", transaction);
+    })
+    .catch(function(error) {
+        console.error("Error fetching transaction:", error);
+    });
+
+// 查询交易收据
+web3.eth.getTransactionReceipt(transactionHash)
+    .then(function(receipt) {
+        console.log("Check Transaction receipt:", receipt);
+    })
+    .catch(function(error) {
+        console.error("Error fetching transaction receipt:", error);
+    });
