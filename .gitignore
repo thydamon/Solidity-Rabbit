@@ -9,3 +9,5 @@ hardhat-tutorial/ignition/modules
 test
 web3js-tutorial/modules
 hardhat-tutorial/.env
+web3js-tutorial/.env
+web3js-tutorial/package-lock.json
