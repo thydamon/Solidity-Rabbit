@@ -11,3 +11,8 @@ web3js-tutorial/modules
 hardhat-tutorial/.env
 web3js-tutorial/.env
 web3js-tutorial/package-lock.json
+Dapp/counter/node_modules
+Dapp/counter/package-lock.json
+Dapp/counter/.vscode
+Dapp/counter/dist
+Dapp/counter/dist-ssr
