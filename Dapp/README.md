@@ -14,5 +14,8 @@
 
 # 初始化前端工程
 ```shell
+# 初始化vue
 npm init vue@latest
+# 引入web3.js依赖
+npm i web3@1.8.0
 ```
