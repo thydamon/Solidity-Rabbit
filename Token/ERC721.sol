@@ -216,6 +216,7 @@ contract BaseERC721 {
         address operator
     ) public view returns (bool) {
         /**code*/
+        return _operatorApprovals[owner][operator];
     }
 
     /**
@@ -367,6 +368,7 @@ contract BaseERC721 {
      */
     function _approve(address to, uint256 tokenId) internal virtual {
         /**code*/
+        _tokenApprovals[tokenId] = to;
 
         emit Approval(ownerOf(tokenId), to, tokenId);
     }
@@ -394,13 +396,22 @@ contract BaseERC721 {
         address to,
         uint256 tokenId
     ) internal virtual {
-        
+
     }
 
     function _addTokenToAllTokensEnumeration(uint256 tokenId) private {
         // Enumerable数据更新
         _allTokensIndex[tokenId] = _allTokens.length;
         _allTokens.push(tokenId);
+    }
+
+    function _addTokenToOwnerEnumeration(
+        address to,
+        uint256 tokenId
+    ) private {
+        // Enumerable数据更新
+        _ownedTokensIndex[tokenId] = _ownedTokens[to].length;
+        _ownedTokens[to].push(tokenId);
     }
 
     function _removeTokenFromOwnerEnumeration(
