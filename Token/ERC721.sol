@@ -123,9 +123,7 @@ contract BaseERC721 {
         // should return baseURI
         string memory baseURI = _baseURI;
         return
-            bytes(baseURI).length > 0
-                ? string(abi.encodePacked(baseURI, toString(tokenId)))
-                : "";
+            bytes(baseURI).length > 1 ? string(abi.encodePacked(baseURI, tokenId.toString())) : "";
     }
 
     /**
@@ -140,7 +138,7 @@ contract BaseERC721 {
      * Emits a {Transfer} event.
      */
     function mint(address to, uint256 tokenId) public {
-        require(/**code*/ address(0) == to, "ERC721: mint to the zero address");
+        require(/**code*/ to != address(0), "ERC721: mint to the zero address");
         require(/**code*/ !_exists(tokenId), "ERC721: token already minted");
 
         /**code*/
@@ -172,10 +170,10 @@ contract BaseERC721 {
      */
     function approve(address to, uint256 tokenId) public {
         address owner = ownerOf(tokenId);
-        require(to != from/**code*/, "ERC721: approval to current owner");
+        require(to != owner/**code*/, "ERC721: approval to current owner");
 
         require(
-            /**code*/_msgSender() == owner || isApprovedForAll(owner, _msgSender()),
+            /**code*/msg.sender == owner || isApprovedForAll(owner, msg.sender),
             "ERC721: approve caller is not owner nor approved for all"
         );
 
@@ -373,12 +371,10 @@ contract BaseERC721 {
         emit Approval(ownerOf(tokenId), to, tokenId);
     }
 
-    function _mint(address to, uint256 tokenId) public virtual{
-        require(/**code*/ address(0) == to, "ERC721: mint to the zero address");
-        require(/**code*/ !_exists(tokenId), "ERC721: token already minted");
+    function _mint(address to, uint256 tokenId) internal virtual{
 
         /**code*/
-        beforeTokenTransfer(address(0), to, tokenId);
+        _beforeTokenTransfer(address(0), to, tokenId);
 
         _balances[to] += 1;
         _owners[tokenId] = to;
@@ -386,8 +382,6 @@ contract BaseERC721 {
         // Enumerable数据更新
         _addTokenToAllTokensEnumeration(tokenId);
         _addTokenToOwnerEnumeration(to, tokenId);
-
-        emit Transfer(address(0), to, tokenId);
     }
 
 
