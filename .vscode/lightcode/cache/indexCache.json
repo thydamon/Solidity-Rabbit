@@ -1,0 +1,14 @@
+{
+  "cacheVersion": "v1",
+  "localModules": [
+    {
+      "modulePath": "d:\\code\\web3\\Solidity-Rabbit",
+      "moduleName": "Solidity-Rabbit",
+      "depLocalModulePaths": [],
+      "depRemoteModulePaths": []
+    }
+  ],
+  "remoteModules": [],
+  "fileIndexes": {},
+  "files": []
+}

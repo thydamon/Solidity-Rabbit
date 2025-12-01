@@ -1,26 +1,22 @@
 {
   "name": "hardhat-tutorial",
   "version": "1.0.0",
-  "description": "This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a Hardhat Ignition module that deploys that contract.",
   "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "@chainlink/contracts": "^1.5.0",
+    "@nomicfoundation/hardhat-toolbox": "^6.1.0",
+    "dotenv": "^17.2.3",
+    "hardhat": "^2.19.0",
+    "prettier": "2.8.8",
+    "prettier-plugin-solidity": "1.1.0"
+  },
+  "description": "```shell\r yarn init\r yarn add --dev hardhat@^2.19.0\r ```\r ## 2、初始化hardhat\r 如果不初始化，编译的时候会报错，当前不是一个hardhat项目\r ```shell\r yarn hardhat init\r ```\r ## 3、安装代码格式化插件\r ```shell\r yarn add --dev prettier@2.8.8 prettier-plugin-solidity@1.1.0\r # 添加配置文件.prettierrc\r {\r     \"tabWidth\": 4,\r     \"useTabs\": false,\r     \"semi\": false,\r     \"singleQuote\": false\r }\r # 添加配置文件.prettierignore\r node_modules\r package.json\r img\r artifacts\r cache\r coverage\r .env\r .*\r README.md\r coverage.json\r ```\r ## 4、编译合约\r 将合约放在 contracts 目录下\r ```shell\r yarn hardhat compile\r ```\r ## 添加dotenv支持\r 配置一下 dotenv 插件，这样我们就可以使用 dotenv 来获取环境变量,开发过程中，会牵扯到很多隐私信息，如私钥等，我们会希望将其存储在 .env 文件或直接设置在终端中，比如我们的 RINKEBY_PRIVATE_TOKEN，这样我们就可以在部署脚本中使用 process.env.RINKEBY_PRIVATE_TOKEN 获取到值，无需在代码中显式写入，减少隐私泄漏风险。\r ```shell\r yarn add --dev dotenv\r ```\r 在项目根目录创建.env文件\r ```shell\r RINKEBY_RPC_URL=url\r RINKEBY_PRIVATE_KEY=0xkey\r ETHERSCAN_API_KEY=key\r COINMARKETCAP_API_KEY=key\r ```\r 在hardhat.config.js中读取变量\r ```javascript\r require(\"dotenv\").config()",
+  "directories": {
+    "test": "test"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "@chainlink/contracts": "^1.4.0",
-    "@nomicfoundation/hardhat-toolbox": "^6.0.0",
-    "@nomicfoundation/hardhat-verify": "^2.0.14",
-    "hardhat": "^2.25.0",
-    "prettier": "^3.6.2",
-    "prettier-plugin-solidity": "^2.0.0"
-  },
-  "dependencies": {
-    "dotenv": "^17.0.1",
-    "yarn": "^1.22.22"
-  },
-  "directories": {
-    "test": "test"
-  }
+  "author": ""
 }
