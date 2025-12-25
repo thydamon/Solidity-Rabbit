@@ -1,8 +1,10 @@
 import hashlib
 import json
 from time import time
+from urllib.parse import urlparse
 from uuid import uuid4
 
+import requests
 from flask import Flask, request, jsonify
 
 """
@@ -13,6 +15,7 @@ class Blockchain(object):
     def __init__(self):
         self.chain = []
         self.current_transactions = []
+        self.nodes = set()
 
         # Create the genesis block
         self.new_block(previous_hash=1, proof=100)
@@ -55,6 +58,81 @@ class Blockchain(object):
         })
 
         return self.last_block["index"] + 1
+
+    def register_nodes(self, address):
+        """
+        Add a new node to the list of nodes
+        :param address: <str> Address of node. Eg. 'http://192.168.0.5:5000'
+        :return: None
+        """
+
+        parsed_url = urlparse(address)
+        self.nodes.add(parsed_url.netloc)
+
+    """
+    区块链的共识算法：前面提到，冲突是指不同的节点拥有不同的链，为了解决这个问题，规定最长的、有效的链才是最终的链，换句话说，网络中有效最长链才是实际的链。
+    """
+    def valid_chain(self, chain):
+        """
+        验证区块链是否有效，即是否可以从创世块到最后一个区块的链接起来。
+        :param chain:
+        :return:
+        """
+
+        last_block = chain[0]
+        current_index = 1
+
+        while current_index < len(chain):
+            block = chain[current_index]
+            print(f'{last_block} -> {block}')
+            print("\n-----------------\n")
+            # Check that the hash of the block is correct
+            # 验证当前区块的存放的前一个区块的哈希值是否与上一个区块的哈希值相等
+            if block['previous_hash'] != self.hash(last_block):
+                return False
+
+            # Check that the Proof of Work is correct
+            # 验证当前区块的工作量证明是否正确
+            # 验证方法是：hash(last_block['proof'] + block['proof'])[:4] == "0000"
+            if not self.valid_proof(last_block['proof'], block['proof']):
+                return False
+
+            last_block = block
+            current_index += 1
+
+        return True
+
+    def resolve_conflict(self):
+        """
+        共识算法解决冲突
+        使用网络中最长的、有效的链作为实际的链。
+        :return: <bool> True if our chain was replaced, False if not
+        """
+        neighbours = self.nodes
+        new_chain = None
+
+        # We're only looking for chains longer than ours
+        max_length = len(self.chain)
+
+        # Grab and verify the chains from all the node
+        for node in neighbours:
+            response = requests.get(f'http://{node}/chain')
+
+            if response.status_code == 200:
+                length = response.json()['length']
+                chain = response.json()['chain']
+
+                # Check if the length is longer and the chain is valid
+                if length > max_length and self.valid_chain(chain):
+                    max_length = length
+                    new_chain = chain
+
+        # Replace our chain if we discover a new, valid chain longer than ours
+        if new_chain:
+            self.chain = new_chain
+            return True
+
+        return False
 
     @staticmethod
     def hash(block):
@@ -161,6 +239,41 @@ def full_chain():
     }
 
     return json.dumps(response), 200
+
+@app.route('/nodes/register', methods=['POST'])
+def register_nodes():
+    values = request.get_json()
+
+    nodes = values.get('nodes')
+    if nodes is None:
+        return "Error: Please supply a valid list of nodes", 400
+
+    for node in nodes:
+        blockchain.register_nodes(node)
+
+    response = {
+        'message': 'New nodes have been added',
+        'total_nodes': list(blockchain.nodes),
+    }
+
+    return jsonify(response), 201
+
+@app.route('/nodes/resolve', methods=['GET'])
+def consensus():
+    replaced = blockchain.resolve_conflict()
+
+    if replaced:
+        response = {
+            'message': 'Congratulations, new node has been added',
+            'total_nodes': list(blockchain.nodes)
+        }
+    else:
+        response = {
+            'message': 'No new nodes added',
+            'total_nodes': list(blockchain.nodes)
+        }
+
+    return jsonify(response), 200
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
