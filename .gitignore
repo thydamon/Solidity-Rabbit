@@ -1,5 +1,7 @@
 .deps
 .states
+.cache
+.vscode
 remix-tutorial/contracts/artifacts
 web3js-tutorial/node_modules
 web3js-tutorial/js
